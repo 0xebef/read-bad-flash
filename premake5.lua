@@ -1,0 +1,70 @@
+workspace("read-bad-flash")
+
+    configurations({
+        "debug",
+        "release"
+    })
+
+    project("read-bad-flash")
+
+        kind("ConsoleApp")
+        language("C")
+        cdialect("gnu11")
+        files({
+            "*.c"
+        })
+        defines({
+            "_LARGEFILE_SOURCE",
+            "_FILE_OFFSET_BITS=64",
+            "_FORTIFY_SOURCE=2"
+        })
+        warnings("extra")
+        strictaliasing("off")
+        omitframepointer("on")
+        flags({
+            "FatalWarnings"
+        })
+        buildoptions({
+            "-pipe",
+            "-pie",
+            "-fpie",
+            "-fno-plt",
+            "-fexceptions",
+            "-fasynchronous-unwind-tables",
+            "-fno-strict-overflow",
+            "-fwrapv",
+            "-static-libgcc",
+            "-fvisibility=hidden",
+            "-fstack-clash-protection",
+            "-fstack-protector-strong",
+            "-fcf-protection=full",
+            "--param ssp-buffer-size=4",
+            "-Wshadow",
+            "-Wformat",
+            "-Wformat-security"
+        })
+        links({
+            "rt"
+        })
+        linkoptions({
+            "-Wl,-pie",
+            "-Wl,-z,relro",
+            "-Wl,-z,now",
+            "-Wl,-z,defs"
+        })
+        targetname("read-bad-flash")
+
+        filter("configurations:debug")
+            defines({
+                "DEBUG"
+            })
+            symbols("on")
+            optimize("debug")
+            objdir("obj/debug")
+            targetdir("bin/debug")
+
+        filter("configurations:release")
+            symbols("off")
+            optimize("speed")
+            objdir("obj/release")
+            targetdir("bin/release")
